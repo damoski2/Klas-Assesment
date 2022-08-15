@@ -31,5 +31,6 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
         enum: ['India', 'USA', 'UK', 'Canada']
-    } })
+    }});
+    
 export const User = mongoose.model<IUser>('User', userSchema);
