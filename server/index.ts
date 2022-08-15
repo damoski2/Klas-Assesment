@@ -14,13 +14,14 @@ let mongo_url: string = process.env.MONGO_LOCAL_URL?.toString() || 'mongodb://lo
 const app: Express = express();
 const port = process.env.PORT;
 
-
-// API Routes
-app.use('/api', userRoute);
-
 // MiddleWare
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+
+
+// API Routes
+app.use('/api', userRoute);
 
 
 
@@ -29,9 +30,6 @@ mongoose.connect(mongo_url, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 } as ConnectOptions ).then(()=> console.log('Database Connected'));
-
-
-
 
 
 
