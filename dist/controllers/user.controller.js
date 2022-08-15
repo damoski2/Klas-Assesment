@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMany = void 0;
+exports.deleteUser = exports.editCell = exports.clearCollection = exports.filterVerified = exports.filteredFetch = exports.createMany = void 0;
 const users_model_1 = require("../models/users.model");
 const sample_users_1 = require("../sample_users");
 const createMany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,8 +19,89 @@ const createMany = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     catch (e) {
         res.status(400).json({
-            error: e
+            error: e.message
         });
     }
 });
 exports.createMany = createMany;
+const filteredFetch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c;
+    try {
+        let order = (_a = req.query.order) !== null && _a !== void 0 ? _a : 1;
+        let sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : '_id';
+        let limit = req.query.limit ? parseInt(req.query.limit) : 3;
+        let skip = Number(req.query.skip) ? Number(req.query.skip) : 0;
+        const sort = { [sortBy]: order };
+        let totalDoc = yield users_model_1.User.countDocuments();
+        let pages = Math.ceil(totalDoc / limit);
+        let pageNumber = (_c = Number(req.query.page)) !== null && _c !== void 0 ? _c : 1;
+        let startFrom = (pageNumber - 1) * limit;
+        let data = yield users_model_1.User.find({}).sort(sort).skip(skip).skip(startFrom).limit(limit);
+        res.status(200).json({
+            data,
+            pages,
+            pageNumber,
+        });
+    }
+    catch (e) {
+        res.status(400).json({
+            error: e.message
+        });
+    }
+});
+exports.filteredFetch = filteredFetch;
+const filterVerified = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _d;
+    try {
+        let { verified } = (_d = req.body) !== null && _d !== void 0 ? _d : false;
+        let data = yield users_model_1.User.find({ verified: verified });
+        res.status(200).json(data);
+    }
+    catch (e) {
+        //console.log(e)
+        res.status(400).json({
+            error: e.message
+        });
+    }
+});
+exports.filterVerified = filterVerified;
+const clearCollection = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield users_model_1.User.remove({});
+        res.status(200).json({
+            msg: 'Collection cleared'
+        });
+    }
+    catch (e) {
+    }
+});
+exports.clearCollection = clearCollection;
+const editCell = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let { id, field, value } = req.body;
+        let data = yield users_model_1.User.findByIdAndUpdate(id, { [field]: value });
+        data = yield users_model_1.User.findById(id);
+        res.status(200).json(data);
+    }
+    catch (e) {
+        res.status(400).json({
+            error: e.message
+        });
+    }
+});
+exports.editCell = editCell;
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let { id } = req.body;
+        yield users_model_1.User.findByIdAndDelete(id);
+        res.status(200).json({
+            msg: 'User deleted'
+        });
+    }
+    catch (e) {
+        res.status(400).json({
+            error: e.message
+        });
+    }
+});
+exports.deleteUser = deleteUser;

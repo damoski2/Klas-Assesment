@@ -79,4 +79,11 @@ export const sample_users: IUser[] = [
         verified: false,
         country: 'USA'
     },
+    {
+        name: 'peace red',
+        email: 'peaceR@gmail.com',
+        phone: '+8-771-42-7290',
+        verified: true,
+        country: 'UK'
+    },
 ]
