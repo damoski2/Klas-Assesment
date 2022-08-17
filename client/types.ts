@@ -26,3 +26,9 @@ export interface usePaginationProps {
     onPageChange?: (page: number) => void;
     className?: string;
 }
+
+export interface EditData {
+    name: string;
+    phone: string;
+    country: string;
+}

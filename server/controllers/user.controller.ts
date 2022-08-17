@@ -85,6 +85,7 @@ export const clearCollection = async(req: Request, res: Response): Promise<void>
 export const editCell = async(req: Request, res: Response): Promise<void>=>{
     try{
         let { id, formData } = req.body;
+        console.log(id, formData)
 
         let obj: {[key: string]: string} = {};
 
@@ -96,7 +97,10 @@ export const editCell = async(req: Request, res: Response): Promise<void>=>{
 
         let data = await User.findByIdAndUpdate(id, obj);
         data = await User.findById(id);
-        res.status(200).json(data);
+        res.status(200).json({
+            data,
+            msg: 'Editted successfully'
+        });
     }catch(e: any){
         res.status(400).json({
             error: e.message

@@ -10,7 +10,7 @@ import { ColData } from "../types";
 const Home: NextPage = () => {
 
   const columns : ColData[] = [
-    { field: "id", headerName: "ID", width: 70, sortable: false },
+    { field: "_id", headerName: "ID", width: 70, sortable: true },
     { field: "name", headerName: "Name", width: 130, sortable: true },
     { field: "phone", headerName: "Phone", width: 130, sortable: true },
     { field: "verified", headerName: "Verified", width: 130, sortable: true },
@@ -27,6 +27,7 @@ const Home: NextPage = () => {
     <div className={styles.container}>
 
     <h1 className={styles.h1} >Re Usable DataGrid</h1>
+    <h3 className={styles.h3} >Click On Column header to sort by it</h3>
 
     <DataGrid columns={columns} rows={users} pageSize={3} />
 

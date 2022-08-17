@@ -3,9 +3,6 @@
     grid-template-columns: repeat(5,1fr);
 }
 
-.table > div.table__header{
-    font-weight: 700;
-}
 
 .table > div{
     border-bottom: 1px solid #c8c1c1;

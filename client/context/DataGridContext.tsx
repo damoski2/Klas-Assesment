@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import React, { createContext, useEffect, useState } from "react";
 import { IUser } from "../types";
+import { NextRouter, useRouter } from "next/router";
 
 const API_URL: string = "http://localhost:8000/api";
 
@@ -26,6 +27,9 @@ export const DataGridContext: React.Context<any> = createContext<null>(null);
 export const DataGridProvider: React.FC<ContextProp> = ({
   children,
 }): JSX.Element => {
+
+  const router: NextRouter = useRouter()
+
   const [users, setUsers] = useState<IUser | []>([]);
   const [query, setQuery] = useState<QueryType>({
     skip: 0,
@@ -43,6 +47,12 @@ export const DataGridProvider: React.FC<ContextProp> = ({
 
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [idtoEdit, setIdToEdit] = useState<string>("");
+
+  const toggleModal = (): void => {
+    setShowModal(!showModal);
+  };
 
   const { skip, limit, order, sortBy } = query;
 
@@ -54,7 +64,6 @@ export const DataGridProvider: React.FC<ContextProp> = ({
       setTotalPages(data?.pages);
       setCurrentPage(data?.pageNumber);
       setUsers(data?.data);
-      console.log(data);
     } catch (e) {
       console.log(e);
     }
@@ -67,12 +76,11 @@ export const DataGridProvider: React.FC<ContextProp> = ({
         let _page = currentPage - 1;
         console.log(_page);
         let { data } = await axios.post(
-          `${API_URL}/filter/fetch?page=${_page}`
+          `${API_URL}/filter/fetch?page=${_page}&limit=${limit}&order=${order}&sortBy=${sortBy}`
         );
         setUsers(data?.data);
         setCurrentPage(data?.pageNumber);
         setTotalPages(data?.pages);
-        console.log(data);
       } else {
         alert("First page");
       }
@@ -87,7 +95,7 @@ export const DataGridProvider: React.FC<ContextProp> = ({
         setCurrentPage((prev) => prev + 1);
         let _page = currentPage + 1;
         let { data } = await axios.post(
-          `${API_URL}/filter/fetch?page=${_page}`
+          `${API_URL}/filter/fetch?page=${_page}&limit=${limit}&order=${order}&sortBy=${sortBy}`
         );
         setUsers(data?.data);
         setCurrentPage(data?.pageNumber);
@@ -104,20 +112,24 @@ export const DataGridProvider: React.FC<ContextProp> = ({
   const jumpToPage = async (page: number): Promise<void> => {
     try {
       setCurrentPage(page);
-      let { data } = await axios.post(`${API_URL}/filter/fetch?page=${page}`);
+      let { data } = await axios.post(
+        `${API_URL}/filter/fetch?page=${page}&limit=${limit}&order=${order}&sortBy=${sortBy}`
+      );
       setUsers(data?.data);
       setCurrentPage(data?.pageNumber);
       setTotalPages(data?.pages);
       console.log(data);
     } catch (e) {
-        console.log(e)
+      console.log(e);
     }
   };
 
   const deleteItem = async (id: string): Promise<void> => {
     try {
-      let { data } = await axios.delete(`${API_URL}/delete/${id}`);
-      console.log(data);
+      let { data } = await axios.delete(`${API_URL}/delete`, { data: { id: id } });
+      alert(data.msg)
+      router.reload()
+      await fetchUsers();
     } catch (e) {
       console.log(e);
     }
@@ -130,18 +142,35 @@ export const DataGridProvider: React.FC<ContextProp> = ({
       setNewData((prev) => ({ ...prev, [name]: value }));
     };
 
-  const handleEdit = async (id: string): Promise<void> => {
+  const handleSortChange = (_order: number, _sortBy: string) => {
+    console.log(_order, _sortBy);
+    setQuery((prev) => ({ ...prev, order: _order, sortBy: _sortBy }));
+  };
+
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
     try {
-      let post = {} as any;
+      let formData = {} as any;
       for (let key in newData) {
-        if (newData[key] !== "") {
-          post[key] = newData[key];
+        if (newData[key] !== "" && newData[key] !== null) {
+          formData[key] = newData[key];
         }
       }
-      let { data } = await axios.put(`${API_URL}/edit/${id}`, {
-        ...post,
-        id: id,
-      });
+
+      let { data } = await axios.put(
+        `${API_URL}/edit`,
+        {
+          formData,
+          id: idtoEdit,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      alert(data.msg)
+      router.reload()
     } catch (e) {
       console.log(e);
     }
@@ -149,7 +178,7 @@ export const DataGridProvider: React.FC<ContextProp> = ({
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [query]);
 
   return (
     <DataGridContext.Provider
@@ -157,12 +186,18 @@ export const DataGridProvider: React.FC<ContextProp> = ({
         users,
         totalPages,
         currentPage,
+        query,
+        showModal,
+        newData,
+        toggleModal,
         nextPageFetch,
         prevPageFetch,
         jumpToPage,
         deleteItem,
         handleChange,
         handleEdit,
+        handleSortChange,
+        setIdToEdit,
       }}
     >
       {children}

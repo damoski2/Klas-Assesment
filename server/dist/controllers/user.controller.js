@@ -79,6 +79,7 @@ exports.clearCollection = clearCollection;
 const editCell = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let { id, formData } = req.body;
+        console.log(id, formData);
         let obj = {};
         for (let key in formData) {
             obj[key] = formData[key];
@@ -86,7 +87,10 @@ const editCell = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(obj);
         let data = yield users_model_1.User.findByIdAndUpdate(id, obj);
         data = yield users_model_1.User.findById(id);
-        res.status(200).json(data);
+        res.status(200).json({
+            data,
+            msg: 'Editted successfully'
+        });
     }
     catch (e) {
         res.status(400).json({
