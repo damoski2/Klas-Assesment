@@ -12,3 +12,6 @@
 - Edit cell content
 - Auto-size columns based on cell content
 - Ability to delete rows
+
+## Extra
+- Implemented Pagination of row data
