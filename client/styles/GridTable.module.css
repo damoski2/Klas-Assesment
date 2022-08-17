@@ -1,0 +1,20 @@
+.table{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+}
+
+.table > div.table__header{
+    font-weight: 700;
+}
+
+.table > div{
+    border-bottom: 1px solid #c8c1c1;
+}
+
+.pagination{
+    width: 20%;
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    margin-top: 2em;
+}

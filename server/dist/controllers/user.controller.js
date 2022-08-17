@@ -25,7 +25,7 @@ const createMany = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createMany = createMany;
 const filteredFetch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a, _b;
     try {
         let order = (_a = req.query.order) !== null && _a !== void 0 ? _a : 1;
         let sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : '_id';
@@ -34,7 +34,7 @@ const filteredFetch = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const sort = { [sortBy]: order };
         let totalDoc = yield users_model_1.User.countDocuments();
         let pages = Math.ceil(totalDoc / limit);
-        let pageNumber = (_c = Number(req.query.page)) !== null && _c !== void 0 ? _c : 1;
+        let pageNumber = Number(req.query.page) ? Number(req.query.page) : 1;
         let startFrom = (pageNumber - 1) * limit;
         let data = yield users_model_1.User.find({}).sort(sort).skip(skip).skip(startFrom).limit(limit);
         res.status(200).json({
@@ -51,9 +51,9 @@ const filteredFetch = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.filteredFetch = filteredFetch;
 const filterVerified = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _d;
+    var _c;
     try {
-        let { verified } = (_d = req.body) !== null && _d !== void 0 ? _d : false;
+        let { verified } = (_c = req.body) !== null && _c !== void 0 ? _c : false;
         let data = yield users_model_1.User.find({ verified: verified });
         res.status(200).json(data);
     }
@@ -78,8 +78,13 @@ const clearCollection = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.clearCollection = clearCollection;
 const editCell = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let { id, field, value } = req.body;
-        let data = yield users_model_1.User.findByIdAndUpdate(id, { [field]: value });
+        let { id, formData } = req.body;
+        let obj = {};
+        for (let key in formData) {
+            obj[key] = formData[key];
+        }
+        console.log(obj);
+        let data = yield users_model_1.User.findByIdAndUpdate(id, obj);
         data = yield users_model_1.User.findById(id);
         res.status(200).json(data);
     }

@@ -1,8 +1,13 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import "../styles/globals.scss";
+import type { AppProps } from "next/app";
+import { DataGridProvider } from "../context/DataGridContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <DataGridProvider>
+      <Component {...pageProps} />
+    </DataGridProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;

@@ -39,7 +39,7 @@ export const filteredFetch = async(req: Request, res: Response) =>{
 
         let pages: number = Math.ceil(totalDoc / limit);
 
-        let pageNumber = Number(req.query.page) ?? 1;
+        let pageNumber = Number(req.query.page)? Number(req.query.page) : 1;
 
         let startFrom: number = (pageNumber -1) * limit;
 
@@ -84,8 +84,17 @@ export const clearCollection = async(req: Request, res: Response): Promise<void>
 
 export const editCell = async(req: Request, res: Response): Promise<void>=>{
     try{
-        let { id, field, value } = req.body;
-        let data = await User.findByIdAndUpdate(id, {[field]: value});
+        let { id, formData } = req.body;
+
+        let obj: {[key: string]: string} = {};
+
+        for(let key in formData){
+            obj[key] = formData[key];
+        }
+
+        console.log(obj);
+
+        let data = await User.findByIdAndUpdate(id, obj);
         data = await User.findById(id);
         res.status(200).json(data);
     }catch(e: any){

@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "classnames": "^2.3.1",
     "next": "12.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "sass": "^1.54.4",
+    "scss": "^0.2.4"
   },
   "devDependencies": {
     "@types/node": "18.7.4",
