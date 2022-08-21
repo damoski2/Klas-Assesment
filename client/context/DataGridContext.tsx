@@ -3,7 +3,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { IUser } from "../types";
 import { NextRouter, useRouter } from "next/router";
 
-const API_URL: string = "http://localhost:8000/api";
+const API_URL: string | undefined = process.env.NODE_ENV === "development"? process.env.development_url : process.env.production_url;
 
 type ContextProp = {
   children: JSX.Element;
