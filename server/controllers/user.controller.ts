@@ -3,6 +3,7 @@ import { sample_users } from '../sample_users'
 import { Request, Response } from 'express';
 import { IUser } from '../types'
 
+// Business Logic
 
 //type SortType = "name" | "_id" | "email" | "phone" | "verified" | "country";
 type SortType ={
@@ -104,9 +105,11 @@ export const editCell = async(req: Request, res: Response): Promise<void>=>{
     }catch(e: any){
         res.status(400).json({
             error: e.message
-        })
+        });
     }
 }
+
+
 
 export const deleteUser = async(req: Request, res: Response): Promise<void>=>{
     try{
