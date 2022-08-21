@@ -12,7 +12,7 @@ const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const users_route_1 = require("./routes/users.route");
 dotenv_1.default.config();
-let mongo_url = ((_a = process.env.MONGO_LOCAL_URL) === null || _a === void 0 ? void 0 : _a.toString()) || 'mongodb://localhost:27017/test';
+let mongo_url = ((_a = process.env.MONGO_URL) === null || _a === void 0 ? void 0 : _a.toString()) || 'mongodb://localhost:27017/test';
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 // MiddleWare
@@ -22,7 +22,7 @@ app.use(express_1.default.json());
 // API Routes
 app.use('/api', users_route_1.userRoute);
 // Connect to MongoDB
-mongoose_1.default.connect(mongo_url, {
+mongoose_1.default.connect('mongodb+srv://aqua_dev:damodami43@cluster0.vu3xazx.mongodb.net/?retryWrites=true&w=majority', {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 }).then(() => console.log('Database Connected'));

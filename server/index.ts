@@ -9,7 +9,7 @@ import { userRoute } from './routes/users.route'
 
 dotenv.config();
 
-let mongo_url: string = process.env.MONGO_LOCAL_URL?.toString() || 'mongodb://localhost:27017/test';
+let mongo_url: string = process.env.MONGO_URL?.toString() || 'mongodb://localhost:27017/test';
 
 const app: Express = express();
 const port = process.env.PORT;
@@ -26,7 +26,7 @@ app.use('/api', userRoute);
 
 
 // Connect to MongoDB
-mongoose.connect(mongo_url, {
+mongoose.connect('mongodb+srv://aqua_dev:damodami43@cluster0.vu3xazx.mongodb.net/?retryWrites=true&w=majority', {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 } as ConnectOptions ).then(()=> console.log('Database Connected'));
