@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userRoute = void 0;
+const express_1 = require("express");
+const user_controller_1 = require("../controllers/user.controller");
+exports.userRoute = (0, express_1.Router)();
+exports.userRoute.post('/createMany', user_controller_1.createMany);
+exports.userRoute.post('/filter/fetch', user_controller_1.filteredFetch);
+exports.userRoute.get('/filter/verified', user_controller_1.filterVerified);
+exports.userRoute.get('/clear', user_controller_1.clearCollection);
+exports.userRoute.put('/edit', user_controller_1.editCell);
+exports.userRoute.delete('/delete', user_controller_1.deleteUser);
