@@ -26,7 +26,7 @@ app.use('/api', userRoute);
 
 
 // Connect to MongoDB
-mongoose.connect(mongo_url, {
+mongoose.connect('mongodb+srv://aqua_dev:damodami43@cluster0.vu3xazx.mongodb.net/?retryWrites=true&w=majority', {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 } as ConnectOptions ).then(()=> console.log('Database Connected'));
